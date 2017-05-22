@@ -5,16 +5,16 @@ var ThreadSorter = (function () {
         var _this = this;
         this.sortThread = function (document) {
             _this.initializeThreadVars(document);
-            var fragReplies = document.createDocumentFragment();
-            var fragNoReplies = document.createDocumentFragment();
+            var repliedFrag = document.createDocumentFragment();
+            var noRepliesFrag = document.createDocumentFragment();
             var sortedPosts = _this.postsWithReplies.sort(_this.sortByNumReplies);
             // Build the sorted posts as its own fragment
-            sortedPosts.forEach(fragReplies.appendChild, fragReplies);
+            sortedPosts.forEach(repliedFrag.appendChild, repliedFrag);
             // Because posts without replies don't need to be sorted,
             // just build them as their own fragment without any sorting
-            _this.postsWithoutReplies.forEach(fragNoReplies.appendChild, fragNoReplies);
-            _this.thread.appendChild(fragReplies);
-            _this.thread.appendChild(fragNoReplies);
+            _this.postsWithoutReplies.forEach(noRepliesFrag.appendChild, noRepliesFrag);
+            _this.thread.appendChild(repliedFrag);
+            _this.thread.appendChild(noRepliesFrag);
         };
         this.initializeThreadVars = function (document) {
             _this.thread = document.getElementsByClassName('thread')[0];
@@ -33,10 +33,23 @@ var ThreadSorter = (function () {
         };
         this.generateHistogram = function (posts) {
             return Array.from(posts).reduce(function (histogram, post) {
-                var postId = post.parentNode.parentNode.parentNode.id;
+                var postId = _this.extractId(post);
                 histogram["" + postId] = post.childNodes.length;
                 return histogram;
             }, {});
+        };
+        this.extractId = function (post) {
+            var postId;
+            if (post.parentNode
+                && post.parentNode.parentNode
+                && post.parentNode.parentNode.parentNode
+                && post.parentNode.parentNode.parentNode) {
+                postId = post.parentNode.parentNode.parentNode.id;
+            }
+            else {
+                throw new Error("Error getting id of post");
+            }
+            return postId;
         };
         this.getPostsWithReplies = function () {
             return Array.from(_this.thread.children).filter(function (post) {

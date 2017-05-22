@@ -10,19 +10,19 @@ export default class ThreadSorter {
 
   public sortThread = (document: Document) => {
     this.initializeThreadVars(document);
-    const fragReplies = document.createDocumentFragment();
-    const fragNoReplies = document.createDocumentFragment();
+    const repliedFrag = document.createDocumentFragment();
+    const noRepliesFrag = document.createDocumentFragment();
 
     const sortedPosts = this.postsWithReplies.sort(this.sortByNumReplies);
     
     // Build the sorted posts as its own fragment
-    sortedPosts.forEach(fragReplies.appendChild, fragReplies);
+    sortedPosts.forEach(repliedFrag.appendChild, repliedFrag);
     // Because posts without replies don't need to be sorted,
     // just build them as their own fragment without any sorting
-    this.postsWithoutReplies.forEach(fragNoReplies.appendChild, fragNoReplies)
+    this.postsWithoutReplies.forEach(noRepliesFrag.appendChild, noRepliesFrag)
 
-    this.thread.appendChild(fragReplies);
-    this.thread.appendChild(fragNoReplies);
+    this.thread.appendChild(repliedFrag);
+    this.thread.appendChild(noRepliesFrag);
   }
 
   private initializeThreadVars = (document: Document): void => {
@@ -44,12 +44,24 @@ export default class ThreadSorter {
 
   private generateHistogram = (posts: HTMLCollection) => {
     return Array.from(posts).reduce((histogram: Histogram, post: Node) => {
-      const postId: string = post.parentNode.parentNode.parentNode.id;
-
+      const postId = this.extractId(post);
       histogram[`${postId}`] = post.childNodes.length;
       return histogram;
     }, {})
   };
+
+  private extractId = (post: Node): string => {
+    let postId: string;
+    if ( post.parentNode 
+        && post.parentNode.parentNode
+        && post.parentNode.parentNode.parentNode
+        && post.parentNode.parentNode.parentNode) 
+    { 
+      postId = post.parentNode.parentNode.parentNode.id; 
+    } else { throw new Error(`Error getting id of post`); }
+
+    return postId;
+  }
 
   private getPostsWithReplies = (): Element[] => {
     return Array.from(this.thread.children).filter((post: HTMLDivElement) => {
