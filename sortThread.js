@@ -1,3 +1,5 @@
+
+
 var sortThread = () => {
   if (!HTMLCollection.prototype.filter || !HTMLCollection.prototype.reduce) {
     HTMLCollection.prototype.filter = Array.prototype.filter
@@ -47,14 +49,21 @@ var sortThread = () => {
     return histogram[`${post.id}`];
   })
 
-  const fullThreadAsArray = [].slice.call(findDifference(thread.children, filteredThread)), fragFull = document.createDocumentFragment();
-  const filteredThreadAsArray = [].slice.call(filteredThread), fragFiltered = document.createDocumentFragment();
+  const fullThreadAsArray = Array.from(findDifference(thread.children, filteredThread))
+  const filteredThreadAsArray = Array.from(filteredThread);
+  let fragFiltered = document.createDocumentFragment();
+  let fragFull = document.createDocumentFragment();
   
   const sortedThread = filteredThreadAsArray.sort(sortByNumReplies);
 
   sortedThread.forEach(fragFiltered.appendChild, fragFiltered);
+  // const fragFiltered = sortedThread.reduce((frag, post) => {
+  //   frag.appendChild(post);
+  //   return frag;
+  // }, document.createDocumentFragment());
+
   fullThreadAsArray.forEach(fragFull.appendChild, fragFull)
-  
+  console.log(fragFiltered)
   thread.appendChild(fragFiltered);
   thread.appendChild(fragFull)
 }
