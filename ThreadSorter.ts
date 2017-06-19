@@ -55,11 +55,11 @@ export default class ThreadSorter {
   private extractId = (post: Node): string => {
     let postId: string;
     if ( post.parentNode 
-        && post.parentNode.parentNode
-        && post.parentNode.parentNode.parentNode
-        && post.parentNode.parentNode.parentNode) 
+      && post.parentNode.parentNode
+      && post.parentNode.parentNode.parentNode
+      && post.parentNode.parentNode.parentNode ) 
     { 
-      postId = post.parentNode.parentNode.parentNode.id; 
+      postId = (post.parentNode.parentNode.parentNode as PostContainer).id; 
     } else { throw new Error(`Error getting id of post`); }
 
     return postId;
