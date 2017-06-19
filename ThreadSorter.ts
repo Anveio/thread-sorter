@@ -85,13 +85,6 @@ export default class ThreadSorter {
       return 0;
     }
 
-    if (aReplies < bReplies) {
-      return 1;
-    } else if (aReplies > bReplies) {
-      return -1;
-    } else if (aReplies === bReplies){
-      return 0;
-    }
-    return 0;
+    return aReplies - bReplies
   }
 }
