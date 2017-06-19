@@ -1,5 +1,4 @@
 interface Histogram { [index: string]: number | null }
-interface SortOptions { reverse: boolean }
 
 class PostContainer extends Node {
   id: string;
