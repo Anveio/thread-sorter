@@ -3,11 +3,14 @@ exports.__esModule = true;
 var ThreadSorter = (function () {
     function ThreadSorter() {
         var _this = this;
-        this.sortThread = function (document) {
+        this.sort = function (document, options) {
             _this.initializeThreadVars(document);
             var repliedFrag = document.createDocumentFragment();
             var noRepliesFrag = document.createDocumentFragment();
             var sortedPosts = _this.postsWithReplies.sort(_this.sortByNumReplies);
+            if (options && options.reverse) {
+                sortedPosts = sortedPosts.reverse();
+            }
             // Build the sorted posts as its own fragment
             sortedPosts.forEach(repliedFrag.appendChild, repliedFrag);
             // Because posts without replies don't need to be sorted,

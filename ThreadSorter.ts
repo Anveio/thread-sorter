@@ -1,4 +1,5 @@
 interface Histogram { [index:string]: number | null}
+interface SortOptions { reverse: boolean }
 
 export default class ThreadSorter {
   private thread: Element;
@@ -6,14 +7,15 @@ export default class ThreadSorter {
   private postsWithReplies: Element[];
   private postsWithoutReplies: Element[];
 
-  constructor() {}
-
-  public sortThread = (document: Document) => {
+  public sort = (document: Document, options? : SortOptions) => {
     this.initializeThreadVars(document);
     const repliedFrag = document.createDocumentFragment();
     const noRepliesFrag = document.createDocumentFragment();
 
-    const sortedPosts = this.postsWithReplies.sort(this.sortByNumReplies);
+    let sortedPosts = this.postsWithReplies.sort(this.sortByNumReplies);
+    if (options && options.reverse) {
+      sortedPosts = sortedPosts.reverse();
+    }
     
     // Build the sorted posts as its own fragment
     sortedPosts.forEach(repliedFrag.appendChild, repliedFrag);

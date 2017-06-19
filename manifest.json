@@ -1,0 +1,13 @@
+{
+  "name": "Fourchan Thread Sorter",
+  "version": "0.1.0",
+  "description": "Sorts 4chan Threads by most replied",
+  "background": {
+    "persistent": false,
+    "scripts": ["sortThread.js"]
+  },
+  "permissions": ["http://boards.4chan.org/"],
+  "browser_action": {
+    "default_title": ""
+  }
+}
